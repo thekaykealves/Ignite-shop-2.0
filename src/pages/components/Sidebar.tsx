@@ -23,6 +23,7 @@ export default function Sidebar() {
     cartCount, 
     cartDetails, 
     removeItem,
+    clearCart,
   } = useShoppingCart()
 
   const products = []
@@ -62,8 +63,10 @@ export default function Sidebar() {
       const { checkoutUrl } = response.data
 
       window.location.href = checkoutUrl
+
+      clearCart()
     } catch (error) {
-      // conectar com alguma ferramente de observabilidade (datadog, Sentry)
+      // conectar com alguma ferramenta de observabilidade (datadog, Sentry)
 
       setIsCreatingCheckoutSession(false)
       alert('Falha ao redirecionar o checkout!')
@@ -79,53 +82,63 @@ export default function Sidebar() {
       </ButtonClose>
 
       <SidebarWrapper>
-        <div>
-          <h3>Sacola de compras</h3>
-
-          <ProductsSelected>
-            {products.map(product => {
-              return (
-                <ProductSelected key={product.id}>
-                  <Image src={product.imageUrl} alt="" width={100} height={100} />
-
-                  <ProductDescription>
-                    <div>
-                      <span>{product.name}</span>
-                      <strong>{product.price}</strong>
-                    </div>
-                    <button onClick={() => removeItem(product.id)}>
-                      Remover
-                    </button>
-                  </ProductDescription>
-                </ProductSelected>
-              )
-            })}
-          </ProductsSelected>
-        </div>
-
-        <InfosShoppingCartWrapper>
-          <InfosShoppingCart>
+        {cartCount > 0 ? (
+          <>
             <div>
-              <span>Quantidade</span>
-              {cartCount > 1 ? (
-                <span>{cartCount} itens</span>
-              ) : (
-                <span>{cartCount} item</span>
-              )}
-            </div>
-            <div>
-              <strong>Valor total</strong>
-              <strong>{formatTotal}</strong>
-            </div>
-          </InfosShoppingCart>
+              <h3>Sacola de compras</h3>
 
-          <button 
-            disabled={cartCount === 0 && isCreatingCheckoutSession}
-            onClick={handleBuyProducts}
-          >
-            Finalizar compra
-          </button>
-        </InfosShoppingCartWrapper>
+              <ProductsSelected>
+                {products.map(product => {
+                  return (
+                    <ProductSelected key={product.id}>
+                      <Image src={product.imageUrl} alt="" width={100} height={100} />
+
+                      <ProductDescription>
+                        <div>
+                          <span>{product.name}</span>
+                          <strong>{product.price}</strong>
+                        </div>
+                        <button onClick={() => removeItem(product.id)}>
+                          Remover
+                        </button>
+                      </ProductDescription>
+                    </ProductSelected>
+                  )
+                })}
+              </ProductsSelected>
+            </div>
+
+            <InfosShoppingCartWrapper>
+              <InfosShoppingCart>
+                <div>
+                  <span>Quantidade</span>
+                  {cartCount > 1 ? (
+                    <span>{cartCount} itens</span>
+                  ) : (
+                    <span>{cartCount} item</span>
+                  )}
+                </div>
+                <div>
+                  <strong>Valor total</strong>
+                  <strong>{formatTotal}</strong>
+                </div>
+              </InfosShoppingCart>
+
+              <button 
+                disabled={cartCount === 0 && isCreatingCheckoutSession}
+                onClick={handleBuyProducts}
+              >
+                Finalizar compra
+              </button>
+            </InfosShoppingCartWrapper>
+          </>
+        ) : (
+          <div>
+            <h3>Oops!</h3>
+          
+            <span>Sua sacola está vazia, adicione produtos.</span>
+          </div>
+        )}
       </SidebarWrapper>
     </SidebarContainer>
   )

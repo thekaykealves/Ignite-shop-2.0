@@ -10,6 +10,7 @@ interface Product {
     description: string
     quantity: number
     currency: 'BRL'
+    defaultPriceId: string
   }[],
 }
 
@@ -22,18 +23,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     const formattedProducts = products.map(product => {
-      return {
-        price_data: {
-          currency: 'BRL',
-          product_price: {
-            name: product.name,
-            description: product.description
-          },
-          unit_amount: product.price * 100,
-        },
-        quantity: product.quantity,
-      }
-    })
+      const teste = product.defaultPriceId
+
+      return teste
+  })
     
     const success_url = `${process.env.NEXT_URL}/success?session_id={CHECKOUT_SESSION_ID}`
     const cancel_url = `${process.env.NEXT_URL}/`
@@ -42,7 +35,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       mode: 'payment',
       cancel_url: cancel_url,
       success_url: success_url,
-      line_items: formattedProducts,
+      line_items: products.map(product => {
+        return {
+          price: product.defaultPriceId,
+          quantity: 1,
+        }
+      }),
     })
 
     return res.status(201).json({

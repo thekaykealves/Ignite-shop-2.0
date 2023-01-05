@@ -46,16 +46,26 @@ export const SuccessContainer = styled('main', {
   }
 })
 
-export const SuccessImageContainer = styled('div', {
-  width: '100%',
-  maxWidth: 130,
-  background: 'linear-gradient(180deg, #1ea483 0%, #7465d4 100%)',
-  borderRadius: 8,
-  height: 145,
-  marginTop: '4rem',
-  clipPath: 'circle()',
+export const ImagesContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 
-  padding: '0.25rem',
+  'div + div': {
+    marginLeft: 'calc(-140px / 2)'
+  },
+})
+
+export const SuccessImageContainer = styled('div', {
+  width: 140,
+  height: 140,
+  background: 'linear-gradient(180deg, #1ea483 0%, #7465d4 100%)',
+  boxShadow: '0px 0px 60px rgba(0, 0, 0, 0.8)',
+  marginBottom: 48,
+  clipPath: 'circle()',
+  objectFit: 'scale-down',
+  position: 'relative',
+
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
